@@ -16,10 +16,11 @@ const int NUM_KEYPADS = 16;
 
 class Chip8
 {
-    public:
-        
 
-    private:
+    //TODO: decide which members should be public and private
+    //temporarily, to simplify, everyone will be public 
+
+    public:
         // 4kb of 8 bit memory
         // Starting address at 0x200. ROM can use 0x200 - 0xFFF basically
         // 0x000 - 0x200 (non-inclusive) should be left alone
@@ -51,6 +52,15 @@ class Chip8
         
         // Instructions on chip-8 are 2 bytes long 
         uint16_t opcode;
+
+        //the stack; has 16 levels 
+        uint16_t stack[STACK_LEVEL];
+
+        //stack pointer 
+        uint16_t sp;
+
+        //program counter
+        uint16_t pc;
 };
 
 
