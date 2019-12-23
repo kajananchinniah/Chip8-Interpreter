@@ -1,6 +1,8 @@
 // Sources:
 // https://en.wikipedia.org/wiki/CHIP-8
 // https://github.com/mattmikolay/chip-8/wiki/CHIP%E2%80%908-Technical-Reference
+// http://devernay.free.fr/hacks/chip8/C8TECH10.HTM
+// http://www.multigesture.net/articles/how-to-write-an-emulator-chip-8-interpreter/
 
 #include <cstdint>
 #include <stdio.h>
@@ -29,6 +31,9 @@ class Chip8
 
     public:
         Chip8();
+        void load();
+        void cycle();
+
 
         // 4kb of 8 bit memory
         // Starting address at 0x200. ROM can use 0x200 - 0xFFF basically
@@ -75,7 +80,12 @@ class Chip8
          * Wikipedia contains a list of all the opcodes and what they do
          * https://en.wikipedia.org/wiki/CHIP-8
          * NOTE: I'm not implementing 0NNN
+         * 
+         * This resource contains a more detailed description of what each
+         * opcode does, which made it easier to implement certain opcodes
+         * http://devernay.free.fr/hacks/chip8/C8TECH10.HTM
          */
+
         void OP_00E0();
         void OP_00EE();
         void OP_1NNN();
