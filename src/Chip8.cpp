@@ -18,7 +18,9 @@ void Chip8::load()
 
 void Chip8::cycle()
 {
+    //TODO 
     // Get opcode; retrieve the instruction to execute from memory
+    // Each instruction is 2 bytes, which is why it's extracted this way
     this->opcode = this->memory[this->pc] << 8 | this->memory[this->pc + 1];
 
     // Decode opcode
@@ -31,4 +33,197 @@ void Chip8::cycle()
 }
 
 //TODO: implement opcodes
+// Below are all the opcodes that are implemented
+// See the links mentioned in the Chip8.hpp for more details 
 
+void Chip8::OP_00E0()
+{
+    memset(this->display, 0, DISP_LENGTH * DISP_WIDTH);
+}
+
+void Chip8::OP_00EE()
+{
+    // SEt pc to address at top of stack and then subtract 1 from sp 
+    this->pc = this->stack[this->sp];
+    this->sp--;
+}
+
+void Chip8::OP_1NNN()
+{
+    // Extract the address from the opcode; address is the first 3 nibbles
+    uint16_t address = this->opcode & 0xFFF; 
+
+    //Set pc as that address
+    this->pc = address; 
+}
+
+void Chip8::OP_2NNN()
+{
+    //Place program counter into the stack
+    this->sp++;
+    this->stack[this->sp] = this->pc;
+
+    // Extract the address and then set the pc to it
+    uint16_t address = this->opcode & 0xFFF;
+    this->pc = address;
+}
+
+void Chip8::OP_3XNN()
+{
+    // Extract the register in question
+    uint8_t reg_idx = (this->opcode & 0x0F00) >> 8;
+
+    // Extract the value to compare to
+    uint8_t value = this->opcode & 0x00FF;
+
+    if (this->registers[reg_idx] == value)
+    {
+        this->pc += 2; // Skip next instruction
+    }
+}
+
+void Chip8::OP_4XNN()
+{
+    // Extract the register
+    uint8_t reg_idx = (this->opcode & 0x0F00) >> 8;
+
+    // Extract the value to compare to
+    uint8_t value = this->opcode & 0x00FF;
+
+    if (this->registers[reg_idx] != value)
+    {
+        this->pc += 2; // Skip next instruction 
+    }
+}
+
+void Chip8::OP_5XY0()
+{
+    // Extract the registers 
+    uint8_t reg_idx1 = (this->opcode & 0x0F00) >> 8;
+    uint8_t reg_idx2 = (this->opcode & 0x00F0) >> 4;
+
+    if (this->registers[reg_idx1] == this->registers[reg_idx2])
+    {
+        this->pc += 2;
+    }
+}
+
+void Chip8::OP_6XNN()
+{
+    // Extract the register
+    uint8_t reg_idx = (this->opcode & 0x0F00) >> 8;
+
+    // Extract the value to put into said register
+    uint8_t value = this->opcode & 0x00FF;
+
+    //Set the register to have the value 
+    this->registers[reg_idx] = value;
+}
+
+void Chip8::OP_7XNN()
+{
+    // Extract the register
+    uint8_t reg_idx = (this->opcode & 0x0F00) >> 8;
+
+    // Extract the value to be added
+    uint8_t value = this->opcode & 0x00FF;
+
+    // Add the extracted value to the current register
+    this->registers[reg_idx] += value;
+}
+
+void Chip8::OP_8XY0()
+{
+    // Extract the two registers 
+    uint8_t reg_idx1 = (this->opcode & 0x0F00) >> 8;
+    uint8_t reg_idx2 = (this->opcode & 0x00F0) >> 4;
+
+    // Overwrite one of the registers with the other one
+    this->registers[reg_idx1] = this->registers[reg_idx2];
+}
+
+void Chip8::OP_8XY1()
+{
+    // Extract the two registers
+    uint8_t reg_idx1 = (this->opcode & 0x0F00) >> 8;
+    uint8_t reg_idx2 = (this->opcode & 0x00F0) >> 4;
+
+    // Overwrite one of the registers with the bitwise OR of both
+    this->registers[reg_idx1] = this->registers[reg_idx1] | this->registers[reg_idx2];
+}
+
+void Chip8::OP_8XY2()
+{
+    // Extract the two registers
+    uint8_t reg_idx1 = (this->opcode & 0x0F00) >> 8;
+    uint8_t reg_idx2 = (this->opcode & 0x00F0) >> 4;
+
+    // Overwrite one of the registers with the bitwise AND of both
+    this->registers[reg_idx1] = this->registers[reg_idx1] & this->registers[reg_idx2];
+}
+
+void Chip8::OP_8XY3()
+{
+    // Extract the two registers
+    uint8_t reg_idx1 = (this->opcode & 0x0F00) >> 8;
+    uint8_t reg_idx2 = (this->opcode & 0x00F0) >> 4;
+
+    // Overwrite one of the registers with the bitwise XOR of both
+    this->registers[reg_idx1] = this->registers[reg_idx1] ^ this->registers[reg_idx2];
+}
+
+void Chip8::OP_8XY4()
+{
+    // Extract the two registers
+    uint8_t reg_idx1 = (this->opcode & 0x0F00) >> 8;
+    uint8_t reg_idx2 = (this->opcode & 0x00F0) >> 4;
+
+    //Add both together and overwrite one of the registers. If result > 255, VF = 1 otherwise 0
+    //Only keep the lowest 8 bits 
+
+    uint16_t sum = this->registers[reg_idx1] + this->registers[reg_idx2];
+    if (sum > 255)
+    {
+        this->registers[15] = 1; // VF = 1
+    }
+    else
+    {
+        this->registers[15] = 0; // VF = 0
+    }
+
+    this->registers[reg_idx1] = sum & 0xFF; // keep only the lowest 8 bits
+}
+
+void Chip8::OP_8XY5()
+{
+   // Extract the two registers
+   uint8_t reg_idx1 = (this->opcode & 0x0F00) >> 8;
+   uint8_t reg_idx2 = (this->opcode & 0x00F0) >> 4;
+
+   // If reg_idx1 > reg_idx2, the set VF to 1; 0 otherwise
+   // Subtract reg_idx2 from reg_idx1 and str the result in reg_idx1
+   if (this->registers[reg_idx1] > this->registers[reg_idx2])
+   {
+       this->registers[15] = 1;
+   }
+   else
+   {
+       this->registers[15] = 0;
+   }
+   this->registers[reg_idx1] = this->registers[reg_idx2] - this->registers[reg_idx1];
+}
+
+void Chip8::OP_8XY6()
+{
+
+}
+
+void Chip8::OP_8XY7()
+{
+
+}
+
+void Chip8::OP_8XYE()
+{
+
+}
