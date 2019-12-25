@@ -33,6 +33,7 @@ class Chip8
         Chip8();
         void load();
         void cycle();
+        int rand_num;
 
 
         // 4kb of 8 bit memory
@@ -58,7 +59,7 @@ class Chip8
         uint8_t sound_timer;
 
         // hex keyboard that has 16 keys (0 to F)
-        uint8_t keypad[NUM_KEYPADS];
+        bool keypad[NUM_KEYPADS];
 
         // Graphics display (display is 64x32)
         uint8_t display[DISP_LENGTH][DISP_WIDTH];

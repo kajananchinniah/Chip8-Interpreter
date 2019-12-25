@@ -294,27 +294,51 @@ void Chip8::OP_BNNN()
 
 void Chip8::OP_CXNN()
 {
+    //TODO: should look into a better method of random number generation
+    this->rand_num = rand() % 256; // random number from 0-255
 
+    // Extract the value and register 
+    uint8_t value = this->opcode & 0x00FF; 
+    uint8_t reg_idx = (this->opcode & 0x0F00) >> 8;
+    this->registers[reg_idx] = rand_num & value; // bitwise AND the value and random number into the register
 }
 
 void Chip8::OP_DXYN()
 {
-
+    //TODO: I have no idea how to do this one for now
 }
 
 void Chip8::OP_EX9E()
 {
+    // Extract register
+    uint8_t reg_idx = (this->opcode & 0x0F00) >> 8;
+    uint8_t key = this->registers[reg_idx]; // value located in register
 
+    if (keypad[key] == true) // was keypad located at register hit? 
+    {
+        this->pc += 2; // increment pc by 2 if yes
+    }
 }
 
 void Chip8::OP_EXA1()
 {
+    // Extract register
+    uint8_t reg_idx = (this->opcode & 0x0F00) >> 8;
+    uint8_t key = this->registers[reg_idx]; // key located in the register
 
+    if (keypad[key] == false) // if value located in the register wasn't hit, increment pc by 2 
+    {
+        this->pc += 2;
+    }
 }
 
 void Chip8::OP_FX07()
 {
+    // Extract register
+    uint8_t reg_idx = (this->opcode & 0x0F00) >> 8;
 
+    // Set value of register equal to delay timer
+    this->registers[reg_idx] = this->delay_timer;
 }
 
 void Chip8::OP_FX15()
