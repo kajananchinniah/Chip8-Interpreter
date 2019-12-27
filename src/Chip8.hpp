@@ -35,6 +35,7 @@ class Chip8
         Chip8();
         void load();
         void cycle();
+        void selectOpcode();
         int rand_num;
 
 

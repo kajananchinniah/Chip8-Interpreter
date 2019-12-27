@@ -44,9 +44,8 @@ void Chip8::cycle()
     // Each instruction is 2 bytes, which is why it's extracted this way
     this->opcode = this->memory[this->pc] << 8 | this->memory[this->pc + 1];
 
-    // Decode opcode
-    
-    // Execute opcode
+    // Decode and execute opcode
+    this->selectOpcode();
     
     // Update timer
     if (this->delay_timer > 0)
@@ -58,8 +57,179 @@ void Chip8::cycle()
     {
         this->sound_timer--;
     }
+}
 
+void Chip8::SelectOpcode()
+{
+    switch(this->opcode & 0xF000)
+    {
+        case 0x0000:
+            this->OP_00E0();
+        break;
 
+        case 0x000E:
+            this->OP_00EE();
+        break;
+
+        case 0x1000:
+            this->OP_1NNN();
+        break;
+
+        case 0x2000:
+            this->OP_2NNN();
+        break;
+
+        case 0x3000:
+            this->OP_3XNN();
+        break;
+
+        case 0x4000:
+            this->OP_4XNN();
+        break;
+
+        case 0x5000:
+            this->OP_5XY0();
+        break;
+
+        case 0x6000:
+            this->OP_6XNN();
+        break;
+
+        case 0x7000:
+            this->OP_7XNN();
+        break;
+
+        case 0x8000:
+            switch(this->opcode & 0x000F)
+            {
+                case 0x0000:
+                    this->OP_8XY0();
+                break;
+
+                case 0x0001:
+                    this->OP_8XY1();
+                break;
+
+                case 0x0002:
+                    this->OP_8XY2();
+                break;
+
+                case 0x0003:
+                    this->OP_8XY3();
+                break;
+
+                case 0x0004:
+                    this->OP_8XY4();
+                break;
+
+                case 0x0005:
+                    this->OP_8XY5();
+                break;
+
+                case 0x0006:
+                    this->OP_8XY6();
+                break;
+
+                case 0x0007:
+                    this->OP_8XY7();
+                break;
+
+                case 0x000E:
+                    this->OP_8XYE();
+                break;
+
+                default:
+                    std::cout << "Error: unknown command.\n";
+                break;
+            }
+        break;
+
+        case 0x9000:
+            this->OP_9XY0();
+        break;
+
+        case 0xA000:
+            this->OP_ANNN();
+        break;
+
+        case 0xB000:
+            this->OP_BNNN();
+        break;
+
+        case 0xC000:
+            this->OP_CXNN();
+        break;
+
+        case 0xD000:
+            this->OP_DXYN();
+        break;
+
+        case 0xE000:
+            switch(this->opcode & 0x00FF)
+            {
+                case 0x009E:
+                    this->OP_EX9E();
+                break;
+
+                case 0x00A1:
+                    this->OP_EXA1();
+                break;
+
+                default:
+                    std::cout << "Error: unknown command.\n";
+                break;
+            }
+        break;
+
+        case 0xF000:
+            switch(this->opcode & 0x00FF)
+            {
+                case 0x0007:
+                    this->OP_FX07();
+                break;
+
+                case 0x000A:
+                    this->OP_FX0A();
+                break;
+
+                case 0x0015:
+                    this->OP_FX15();
+                break;
+
+                case 0x0018:
+                    this->OP_FX18();
+                break;
+
+                case 0x001E:
+                    this->OP_FX1E();
+                break;
+
+                case 0x0029:
+                    this->OP_FX29();
+                break;
+
+                case 0x0033:
+                    this->OP_FX33();
+                break;
+
+                case 0x0055:
+                    this->OP_FX55();
+                break;
+
+                case 0x0065:
+                    this->OP_FX65();
+                break;
+
+                default:
+                    std::cout << "Error: unknown command.\n";
+                break;
+            }
+        break;
+
+        default:
+            std::cout << "Error: unknown command.\n";
+        break;
+    }
 }
 
 //TODO: implement opcodes
@@ -350,7 +520,7 @@ void Chip8::OP_DXYN()
     // Extract number of bytes of sprite
     uint8_t n_bytes = this->opcode & 0x000F;
 
-    this->register[15] = 0; // Set this to 1 iff any pixel is erased
+    this->registers[15] = 0; // Set this to 1 iff any pixel is erased
 
     uint8_t read_byte;
 
@@ -367,12 +537,14 @@ void Chip8::OP_DXYN()
 
             if (sprite_pixel != 0) 
             {
-                
+                I (this->display[y + k][x + i] == 1)
+                {
+                    this->registers[15] = 1;
+                }
+                this->display[y + k][x + i] ^= 1;
             }
-
-
-
         }
+        this->pc += 2;
     }
     //TODO: I have no idea how to do this one for now
 }
