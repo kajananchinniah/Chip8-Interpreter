@@ -12,7 +12,7 @@ Chip8::Chip8()
     }
 }
 
-void Chip8::load(std::string file_path)
+void Chip8::load(const char* file_path)
 {
 
     // open rom file
@@ -20,9 +20,19 @@ void Chip8::load(std::string file_path)
 
     if (rom_file.is_open() == true)
     {
-        
+        // Read the contents of the ROM
+        std::string data;
+        while (rom_file)
+        {
+            data.push_back(rom_file.get());
+        }
+
+        // Write the contents into memory
+        for (int i = 0; i < data.size(); i++)
+        {
+            this->memory[START_ADDRESS + i] = data[i];
+        }
     }
-    //TODO
 }
 
 void Chip8::cycle()
