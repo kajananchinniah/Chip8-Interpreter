@@ -7,6 +7,8 @@
 #include <cstdint>
 #include <stdio.h>
 #include <stdlib.h>
+#include <fstream> // for reading files
+#include <string>
 
 //Include the fonts array and fonts size
 #include "fonts.hpp"

@@ -12,8 +12,16 @@ Chip8::Chip8()
     }
 }
 
-void Chip8::load()
+void Chip8::load(std::string file_path)
 {
+
+    // open rom file
+    std::ifstream rom_file(file_path, std::ios::binary);
+
+    if (rom_file.is_open() == true)
+    {
+        
+    }
     //TODO
 }
 
@@ -308,6 +316,22 @@ void Chip8::OP_CXNN()
 
 void Chip8::OP_DXYN()
 {
+    // Extract both registers
+    uint8_t reg_idx1 = (this->opcode & 0x0F00) >> 8;
+    uint8_t reg_idx2 = (this->opcode & 0x00F0) >> 4;
+
+    // Extract number of bytes of sprite
+    uint8_t n_bytes = this->opcode & 0x000F;
+
+    // Temporary variable that reads bytes from memory
+    uint8_t r_byte;
+
+    this->register[15] = 0; // Set this to 1 if any pixel is erased
+
+    for (int i = 0; i < n_bytes; i++)
+    {
+        r_byte = this->memory[i + this->I];
+    }
     //TODO: I have no idea how to do this one for now
 }
 
@@ -406,7 +430,6 @@ void Chip8::OP_FX33()
     uint8_t value = this->registers[reg_idx];
 
     // Place hundreds digit in memory location starting at I, tens in I+1 and ones in I+2 
-
     for (int i = 2; i >= 0; i--)
     {
         this->memory[this->I + i] = value % 10;
