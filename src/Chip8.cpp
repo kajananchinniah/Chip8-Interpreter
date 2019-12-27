@@ -3,6 +3,7 @@
 Chip8::Chip8()
 {
     this->pc = START_ADDRESS; // Should start at 0x200
+    this->sp = -1; // Starts at -1 because of the way it's implemented
 
     // Load fonts into beginning memory addresses
     for (int i = 0; i < FONT_SIZE; i++)
@@ -38,12 +39,13 @@ void Chip8::cycle()
 
 void Chip8::OP_00E0()
 {
+    // clear display 
     memset(this->display, 0, DISP_LENGTH * DISP_WIDTH);
 }
 
 void Chip8::OP_00EE()
 {
-    // SEt pc to address at top of stack and then subtract 1 from sp 
+    // Set pc to address at top of stack and then subtract 1 from sp 
     this->pc = this->stack[this->sp];
     this->sp--;
 }
@@ -102,6 +104,7 @@ void Chip8::OP_5XY0()
     uint8_t reg_idx1 = (this->opcode & 0x0F00) >> 8;
     uint8_t reg_idx2 = (this->opcode & 0x00F0) >> 4;
 
+    // If both registers have same value, increment pc by 2
     if (this->registers[reg_idx1] == this->registers[reg_idx2])
     {
         this->pc += 2;
@@ -341,37 +344,96 @@ void Chip8::OP_FX07()
     this->registers[reg_idx] = this->delay_timer;
 }
 
+void Chip8::OP_FX0A()
+{
+    // Extract register
+    uint8_t reg_idx = (this->opcode & 0x0F00) >> 8;
+    for (int i = 0; i < 16; i++) // only 15 possible keys
+    {
+        // Valid key pad was hit, write that into reg, then exit
+        if (keypad[i] == true)
+        {
+            this->registers[reg_idx] = i;
+            return;
+        }
+    }
+
+    // Redo the previous instruction
+    this->pc = this->pc - 2;
+}
+
 void Chip8::OP_FX15()
 {
+    // Extract register
+    uint8_t reg_idx = (this->opcode & 0x0F00) >> 8;
 
+    // Set the value of delay timer equal to value of register
+    this->delay_timer = this->registers[reg_idx];
 }
 
 void Chip8::OP_FX18()
 {
+    // Extract register
+    uint8_t reg_idx = (this->opcode & 0x0F00) >> 8;
 
+    // Set the value of the sound timer equal to value of register
+    this->sound_timer = this->registers[reg_idx];
 }
 
 void Chip8::OP_FX1E()
 {
+    // Extract register
+    uint8_t reg_idx = (this->opcode & 0x0F00) >> 8;
 
+    // Set I equal to extracter register + I
+    this->I += this->registers[reg_idx];
 }
 
 void Chip8::OP_FX29()
 {
+    // Extract register
+    uint8_t reg_idx = (this->opcode & 0x0F00) >> 8;
+
+    // Set I equal to the location of the hexadecimal sprite corrosponding to the value of the extracted register
+    this->I = FONT_START_ADDRESS + this->registers[reg_idx];
 
 }
 
 void Chip8::OP_FX33()
 {
+    // Extract register
+    uint8_t reg_idx = (this->opcode & 0x0F00) >> 8;
+    uint8_t value = this->registers[reg_idx];
 
+    // Place hundreds digit in memory location starting at I, tens in I+1 and ones in I+2 
+
+    for (int i = 2; i >= 0; i--)
+    {
+        this->memory[this->I + i] = value % 10;
+        value = value / 10;
+    }
 }
 
 void Chip8::OP_FX55()
 {
+    // Extract stopping register
+    uint8_t reg_stop_idx = (this->opcode & 0x0F00) >> 8;
 
+    // Write into memory starting at address I the values from registers R0 to R_reg_stop_idx
+    for (int i = 0; i <= reg_stop_idx; i++)
+    {
+        this->memory[this->I + i] = this->registers[i];
+    }
 }
 
 void Chip8::OP_FX65()
 {
+    // Extract stopping register
+    uint8_t reg_stop_idx = (this->opcode & 0x0F00) >> 8;
 
+    // Write into the registers the values in memory starting at address I
+    for (int i = 0; i <= reg_stop_idx; i++)
+    {
+        this->registers[i] = this->memory[this->I + i];
+    }
 }
