@@ -335,24 +335,42 @@ void Chip8::OP_CXNN()
     this->registers[reg_idx] = rand_num & value; // bitwise AND the value and random number into the register
 }
 
+
 void Chip8::OP_DXYN()
 {
     // Extract both registers
     uint8_t reg_idx1 = (this->opcode & 0x0F00) >> 8;
     uint8_t reg_idx2 = (this->opcode & 0x00F0) >> 4;
 
+    // value of registers represents x and y 
+    // Using moduolo to wrap around screen 
+    uint8_t x = this->registers[reg_idx1] % DISP_LENGTH;
+    uint8_t y = this->registers[reg_idx2] % DISP_WIDTH;
+
     // Extract number of bytes of sprite
     uint8_t n_bytes = this->opcode & 0x000F;
 
-    this->register[15] = 0; // Set this to 1 if any pixel is erased
+    this->register[15] = 0; // Set this to 1 iff any pixel is erased
 
     uint8_t read_byte;
 
+    // Iterate through rows
     for (int i = 0; i < n_bytes; i++)
     {
         read_byte = this->memory[i + this->I];
+
+        //Iterate through columns (i.e. the 8 bits of the col)
         for (int k = 0; k < 8; k++)
         {
+            // Extract whether a particular bit is set or not 
+            uint8_t sprite_pixel = read_byte & (0x80 >> k);
+
+            if (sprite_pixel != 0) 
+            {
+                
+            }
+
+
 
         }
     }
