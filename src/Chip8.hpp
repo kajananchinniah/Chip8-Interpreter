@@ -4,8 +4,8 @@
 // http://devernay.free.fr/hacks/chip8/C8TECH10.HTM
 // http://www.multigesture.net/articles/how-to-write-an-emulator-chip-8-interpreter/
 
+#include <iostream>
 #include <cstdint>
-#include <stdio.h>
 #include <stdlib.h>
 #include <fstream> // for reading files
 #include <string>
@@ -33,7 +33,7 @@ class Chip8
 
     public:
         Chip8();
-        void load();
+        void load(const char* file_path);
         void cycle();
         void selectOpcode();
         int rand_num;

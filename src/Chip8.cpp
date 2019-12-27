@@ -8,7 +8,7 @@ Chip8::Chip8()
     // TODO: add reseting everything later, so that way no garbage value
 
     // Load fonts into beginning memory addresses
-    for (int i = 0; i < FONT_SIZE; i++)
+    for (int i = 0; i < FONTS_SIZE; i++)
     {
         this->memory[i + FONT_START_ADDRESS] = fonts[i]; 
     }
@@ -50,7 +50,7 @@ void Chip8::cycle()
     // Update timer
     if (this->delay_timer > 0)
     {
-        this->delayTimer--;
+        this->delay_timer--;
     }
 
     if (this->sound_timer > 0)
@@ -59,7 +59,7 @@ void Chip8::cycle()
     }
 }
 
-void Chip8::SelectOpcode()
+void Chip8::selectOpcode()
 {
     switch(this->opcode & 0xF000)
     {
@@ -238,8 +238,14 @@ void Chip8::SelectOpcode()
 
 void Chip8::OP_00E0()
 {
-    // clear display 
-    memset(this->display, 0, DISP_LENGTH * DISP_WIDTH);
+    // clear display
+    for (int i = 0; i < DISP_LENGTH; i++)
+    {
+        for (int k = 0; k < DISP_WIDTH; k++)
+        {
+            this->display[i][k] = 0;
+        }
+    }
 }
 
 void Chip8::OP_00EE()
@@ -537,7 +543,7 @@ void Chip8::OP_DXYN()
 
             if (sprite_pixel != 0) 
             {
-                I (this->display[y + k][x + i] == 1)
+                if (this->display[y + k][x + i] == 1)
                 {
                     this->registers[15] = 1;
                 }
