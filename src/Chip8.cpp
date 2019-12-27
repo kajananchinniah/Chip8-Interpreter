@@ -64,11 +64,20 @@ void Chip8::selectOpcode()
     switch(this->opcode & 0xF000)
     {
         case 0x0000:
-            this->OP_00E0();
-        break;
+            switch(this->opcode & 0x000F)
+            {
+                case 0x0000:
+                    this->OP_00E0();
+                break;
 
-        case 0x000E:
-            this->OP_00EE();
+                case 0x000E:
+                    this->OP_00EE();
+                break;
+
+                default:
+                    std::cout << "Error: unknown command.\n";
+                break;
+            }
         break;
 
         case 0x1000:
