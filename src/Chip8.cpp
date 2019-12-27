@@ -3,12 +3,14 @@
 Chip8::Chip8()
 {
     this->pc = START_ADDRESS; // Should start at 0x200
-    this->sp = -1; // Starts at -1 because of the way it's implemented
+    this->sp = -1; // Starts at -1 because of the way stack is implemented
+
+    // TODO: add reseting everything later, so that way no garbage value
 
     // Load fonts into beginning memory addresses
     for (int i = 0; i < FONT_SIZE; i++)
     {
-        memory[i + FONT_START_ADDRESS] = fonts[i]; 
+        this->memory[i + FONT_START_ADDRESS] = fonts[i]; 
     }
 }
 
@@ -47,6 +49,15 @@ void Chip8::cycle()
     // Execute opcode
     
     // Update timer
+    if (this->delay_timer > 0)
+    {
+        this->delayTimer--;
+    }
+
+    if (this->sound_timer > 0)
+    {
+        this->sound_timer--;
+    }
 
 
 }
@@ -333,14 +344,17 @@ void Chip8::OP_DXYN()
     // Extract number of bytes of sprite
     uint8_t n_bytes = this->opcode & 0x000F;
 
-    // Temporary variable that reads bytes from memory
-    uint8_t r_byte;
-
     this->register[15] = 0; // Set this to 1 if any pixel is erased
+
+    uint8_t read_byte;
 
     for (int i = 0; i < n_bytes; i++)
     {
-        r_byte = this->memory[i + this->I];
+        read_byte = this->memory[i + this->I];
+        for (int k = 0; k < 8; k++)
+        {
+
+        }
     }
     //TODO: I have no idea how to do this one for now
 }
