@@ -74,7 +74,6 @@ void Chip8::load(const char* file_path)
 
 void Chip8::cycle()
 {
-    //TODO 
     // Get opcode; retrieve the instruction to execute from memory
     // Each instruction is 2 bytes, which is why it's extracted this way
     this->opcode = this->memory[this->pc] << 8 | this->memory[this->pc + 1];
@@ -279,7 +278,6 @@ void Chip8::selectOpcode()
     }
 }
 
-//TODO: implement opcodes
 // Below are all the opcodes that are implemented
 // See the links mentioned in the Chip8.hpp for more details 
 
