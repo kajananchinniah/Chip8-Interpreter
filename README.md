@@ -4,6 +4,8 @@ A Chip8 interpreter written in C++. Currently there is no sound and the interpre
 
 I've only tested the emulator on Pong and Tetris. Necessary ROMs to use the interpreter can be found online.
 
+So far, I've only compiled on Ubuntu. Not sure if this will work on other platforms.
+
 Chip8 keypad -> keyboard mapping:
 1 -> 1
 2 -> 2
