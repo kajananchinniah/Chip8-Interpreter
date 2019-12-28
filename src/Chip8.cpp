@@ -590,11 +590,11 @@ void Chip8::OP_DXYN()
 
             if (sprite_pixel != 0) 
             {
-                if (this->display[y + k][x + i] == 1)
+                if (this->display[x + k][y + i] == 1)
                 {
                     this->registers[15] = 1;
                 }
-                this->display[y + k][x + i] ^= 1;
+                this->display[x + k][y + i] ^= 1;
             }
         }
     }
