@@ -19,6 +19,11 @@ GUI::~GUI()
     SDL_Quit();
 }
 
+void GUI::update(char* const data, bool* draw_flag, int scale)
+{
+
+}
+
 bool GUI::getInput(bool* keypad)
 {
     bool quit = false;

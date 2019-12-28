@@ -9,7 +9,8 @@ class GUI
         GUI(char const* window_title, int window_w, int window_h);
         ~GUI();
         bool getInput(bool* keypad);
-    
+        void update();
+
     private:
         SDL_Window* window;
         SDL_Renderer* rend;

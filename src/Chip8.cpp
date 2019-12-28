@@ -7,6 +7,7 @@ Chip8::Chip8()
     this->sp = -1; // Starts at -1 because of the way stack is implemented
     this->opcode = 0;
     this->I = 0;
+    this->draw_flag = false;
 
     // clear display, registers, stack, keypad and memory
     for (int i = 0; i < DISP_LENGTH; i++)
@@ -292,7 +293,7 @@ void Chip8::OP_00E0()
             this->display[i][k] = 0;
         }
     }
-    this->pc += 2;
+    this->draw_flag = true;
 }
 
 void Chip8::OP_00EE()
@@ -598,6 +599,7 @@ void Chip8::OP_DXYN()
             }
         }
     }
+    this->draw_flag = true;
     //TODO: I have no idea how to do this one for now
 }
 

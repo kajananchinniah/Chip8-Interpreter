@@ -36,7 +36,9 @@ class Chip8
         void load(const char* file_path);
         void cycle();
         void selectOpcode();
-        int rand_num;
+
+        int rand_num; 
+        bool draw_flag;
 
 
         // 4kb of 8 bit memory
