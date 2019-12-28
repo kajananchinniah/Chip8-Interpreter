@@ -19,15 +19,46 @@ GUI::~GUI()
     SDL_Quit();
 }
 
-void GUI::update(char* const data, bool* draw_flag, int scale)
+void GUI::update(uint8_t data[64][32], bool* draw_flag, int scale)
 {
+    if (*draw_flag == true)
+    {
+        SDL_Rect rect;
+        
+        for (int i = 0; i < 64; i++)
+        {
+            for (int k = 0; k < 32; k++)
+            {
+                rect.x = i * scale;
+                rect.y = k * scale;
+                rect.w = scale;
+                rect.h = scale;
 
+                if (data[i][k] != 0)
+                {
+                    SDL_SetRenderDrawColor(this->rend, 255, 255, 255, 255);
+                    SDL_RenderFillRect(rend, &rect);
+                    SDL_RenderPresent(rend);
+                    SDL_RenderClear(rend);
+                }
+
+                else
+                {
+                    SDL_SetRenderDrawColor(this->rend, 0, 0, 0, 255);
+                    SDL_RenderFillRect(rend, &rect);
+                    SDL_RenderPresent(rend);
+                    SDL_RenderClear(rend);
+                }
+            }
+        }
+        *draw_flag = false;
+    }
 }
 
 bool GUI::getInput(bool* keypad)
 {
     bool quit = false;
-    SDL_EVENT event;
+    SDL_Event event;
 
     while (SDL_PollEvent(&event))
     {
@@ -175,7 +206,7 @@ bool GUI::getInput(bool* keypad)
 
                     case SDL_SCANCODE_V:
                         keypad[0xF] = false;
-                    break'
+                    break;
                 }
             break;
                 
