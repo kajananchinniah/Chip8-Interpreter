@@ -78,6 +78,9 @@ void Chip8::cycle()
     // Each instruction is 2 bytes, which is why it's extracted this way
     this->opcode = this->memory[this->pc] << 8 | this->memory[this->pc + 1];
 
+    //Increment pc 
+    this->pc += 2;
+
     // Decode and execute opcode
     this->selectOpcode();
     
@@ -594,7 +597,6 @@ void Chip8::OP_DXYN()
                 this->display[y + k][x + i] ^= 1;
             }
         }
-        this->pc += 2;
     }
     //TODO: I have no idea how to do this one for now
 }
