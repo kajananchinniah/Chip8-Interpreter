@@ -21,19 +21,7 @@ GUI::~GUI()
 
 void GUI::update(uint8_t data[64][32], bool* draw_flag, int scale)
 {
-    SDL_SetRenderDrawColor(this->rend, 0, 0, 0, 255);
-    SDL_RenderClear(this->rend);
-
     SDL_Rect cell;
-
-    for (int i = 0; i < 64; i++)
-    {
-        for (int k = 0; k < 32; k++)
-        {
-            std::cout << (int)data[i][k] << " ";
-        }
-    }
-    std::cout << "\n\n\n\n";
     for (int i = 0; i < 64; i++)
     {
         for (int k = 0; k < 32; k++)
@@ -46,6 +34,11 @@ void GUI::update(uint8_t data[64][32], bool* draw_flag, int scale)
             if (data[i][k] != 0)
             {
                 SDL_SetRenderDrawColor(rend, 255, 255, 255, 255);
+                SDL_RenderFillRect(rend, &cell);
+            }
+            else
+            {
+                SDL_SetRenderDrawColor(rend, 0, 0, 0, 255);
                 SDL_RenderFillRect(rend, &cell);
             }
         }
@@ -141,7 +134,7 @@ bool GUI::getInput(bool* keypad)
             break;
 
             case SDL_KEYUP:
-                switch(event.key.keysym.sym)
+                switch(event.key.keysym.scancode)
                 {
                     case SDL_SCANCODE_1:
                         keypad[1] = false;

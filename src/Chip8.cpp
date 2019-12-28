@@ -607,7 +607,7 @@ void Chip8::OP_EX9E()
     uint8_t reg_idx = (this->opcode & 0x0F00) >> 8;
     uint8_t key = this->registers[reg_idx]; // value located in register
 
-    if (keypad[key] == true) // was keypad located at register hit? 
+    if (this->keypad[key] == true) // was keypad located at register hit? 
     {
         this->pc += 2; // increment pc by 2 if yes
     }
@@ -638,7 +638,7 @@ void Chip8::OP_FX0A()
 {
     // Extract register
     uint8_t reg_idx = (this->opcode & 0x0F00) >> 8;
-    for (int i = 0; i < 16; i++) // only 15 possible keys
+    for (int i = 0; i < NUM_KEYPADS; i++) // only 15 possible keys
     {
         // Valid key pad was hit, write that into reg, then exit
         if (keypad[i] == true)
