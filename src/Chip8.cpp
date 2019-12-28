@@ -2,10 +2,44 @@
 
 Chip8::Chip8()
 {
+    // Reset pc, sp, opcode and I
     this->pc = START_ADDRESS; // Should start at 0x200
     this->sp = -1; // Starts at -1 because of the way stack is implemented
+    this->opcode = 0;
+    this->I = 0;
 
-    // TODO: add reseting everything later, so that way no garbage value
+    // clear display, registers, stack, keypad and memory
+    for (int i = 0; i < DISP_LENGTH; i++)
+    {
+        for (int k = 0; k < DISP_WIDTH; k++)
+        {
+            this->display[i][k] = 0;
+        }
+    }
+
+    for (int i = 0; i < NUM_REGS; i++)
+    {
+        this->registers[i] = 0;
+    }
+
+    for (int i = 0; i < STACK_LEVEL; i++)
+    {
+        this->stack[i] = 0;
+    }
+
+    for (int i = 0; i < NUM_KEYPADS; i++)
+    {
+        this->keypad[i] = false;
+    }
+
+    for (int i = 0; i < MEMORY_SIZE; i++)
+    {
+        this->memory[i] = 0;
+    }
+
+    // Reset timers
+    this->delay_timer = 0;
+    this->sound_timer = 0;
 
     // Load fonts into beginning memory addresses
     for (int i = 0; i < FONTS_SIZE; i++)
@@ -255,6 +289,7 @@ void Chip8::OP_00E0()
             this->display[i][k] = 0;
         }
     }
+    this->pc += 2;
 }
 
 void Chip8::OP_00EE()
