@@ -304,7 +304,7 @@ void Chip8::OP_00EE()
 void Chip8::OP_1NNN()
 {
     // Extract the address from the opcode; address is the first 3 nibbles
-    uint16_t address = this->opcode & 0xFFF; 
+    uint16_t address = this->opcode & 0x0FFF; 
 
     //Set pc as that address
     this->pc = address; 
@@ -317,7 +317,7 @@ void Chip8::OP_2NNN()
     this->stack[this->sp] = this->pc;
 
     // Extract the address and then set the pc to it
-    uint16_t address = this->opcode & 0xFFF;
+    uint16_t address = this->opcode & 0x0FFF;
     this->pc = address;
 }
 
@@ -566,8 +566,8 @@ void Chip8::OP_DXYN()
 
     // value of registers represents x and y 
     // Using moduolo to wrap around screen 
-    uint8_t x = this->registers[reg_idx1] % DISP_LENGTH;
-    uint8_t y = this->registers[reg_idx2] % DISP_WIDTH;
+    uint8_t x = this->registers[reg_idx1];
+    uint8_t y = this->registers[reg_idx2];
 
     // Extract number of bytes of sprite
     uint8_t n_bytes = this->opcode & 0x000F;

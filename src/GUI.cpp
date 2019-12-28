@@ -38,8 +38,8 @@ void GUI::update(uint8_t data[64][32], bool* draw_flag, int scale)
     {
         for (int k = 0; k < 32; k++)
         {
-            cell.x = k * scale;
-            cell.y = i * scale;
+            cell.x = i * scale;
+            cell.y = k * scale;
             cell.w = scale;
             cell.h = scale;
 

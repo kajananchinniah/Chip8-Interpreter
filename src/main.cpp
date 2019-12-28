@@ -5,7 +5,7 @@ int main(void)
 {
     int scale = 10;
     int delay = 1;
-    char const* file_path = "BC_test.ch8";
+    char const* file_path = "test_opcode.ch8";
 
     GUI gui("Chip 8", DISP_LENGTH*10, DISP_WIDTH*10);
     Chip8 chip8;
