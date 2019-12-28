@@ -7,21 +7,37 @@ I've only tested the emulator on Pong and Tetris. Necessary ROMs to use the inte
 So far, I've only compiled on Ubuntu. Not sure if this will work on other platforms.
 
 Chip8 keypad -> keyboard mapping:
+
 1 -> 1
+
 2 -> 2
+
 3 -> 3
+
 C -> 4
+
 4 -> Q
+
 5 -> W
+
 6 -> E
+
 D -> R
+
 7 -> A
+
 8 -> S
+
 9 -> D
+
 E -> F
+
 A -> Z
+
 0 -> X
+
 B -> C
+
 F -> V 
 
 Future plans:
