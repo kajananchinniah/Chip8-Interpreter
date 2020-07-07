@@ -7,6 +7,7 @@ I've only tested the emulator on Pong and Tetris. Necessary ROMs to use the inte
 So far, I've only compiled on Ubuntu. Not sure if this will work on other platforms.
 
 Sample Image:
+
 ![Pong](https://raw.githubusercontent.com/kajananchinniah/Chip8-Interpreter/master/Pong%20Image%20Sample.png?token=AJUJ7U43FSYWTHU4GDL2FM26A7CRE)
 
 Chip8 keypad -> keyboard mapping:
@@ -48,11 +49,10 @@ Future plans:
 - Possibly aim for computation speedup 
 - Code cleanup
 
-In the src file, compile with:
-g++ *.cpp -std=c++11 $(pkg-config --cflags --libs sdl2)
+Compile using: make Chip8.sh 
 
 Usage after compilation:
-./output_file path_to_ROM
+./Chip8.sh path_to_ROM
 
 Resources consulted:
 - https://en.wikipedia.org/wiki/CHIP-8
